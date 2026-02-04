@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
+import HomePage from "./pages/HomePage";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
 import PathFinderQuiz from "./pages/PathFinderQuiz";
 import SubmitOpportunityPage from "./pages/SubmitOpportunityPage";
@@ -15,8 +16,9 @@ export default function App() {
         </Link>
         <div className="nav-links">
           <NavLink to="/" end>
-            Opportunities
+            Home
           </NavLink>
+          <NavLink to="/opportunities">Opportunities</NavLink>
           <NavLink to="/pathfinder">Path Finder</NavLink>
           <NavLink to="/community">Community</NavLink>
           <NavLink to="/submit">Submit</NavLink>
@@ -25,7 +27,8 @@ export default function App() {
       </nav>
       <main>
         <Routes>
-          <Route path="/" element={<OpportunitiesPage />} />
+          <Route path="/" element={<HomePage />} />
+          <Route path="/opportunities" element={<OpportunitiesPage />} />
           <Route path="/pathfinder" element={<PathFinderQuiz />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/community/:id" element={<CommunityPostPage />} />
