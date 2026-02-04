@@ -1,6 +1,8 @@
 import { BrowserRouter, Routes, Route, Link, NavLink } from "react-router-dom";
 import OpportunitiesPage from "./pages/OpportunitiesPage";
 import PathFinderQuiz from "./pages/PathFinderQuiz";
+import SubmitOpportunityPage from "./pages/SubmitOpportunityPage";
+import AdminPage from "./pages/AdminPage";
 
 export default function App() {
   return (
@@ -14,12 +16,16 @@ export default function App() {
             Opportunities
           </NavLink>
           <NavLink to="/pathfinder">Path Finder</NavLink>
+          <NavLink to="/submit">Submit</NavLink>
+          <NavLink to="/admin">Admin</NavLink>
         </div>
       </nav>
       <main>
         <Routes>
           <Route path="/" element={<OpportunitiesPage />} />
           <Route path="/pathfinder" element={<PathFinderQuiz />} />
+          <Route path="/submit" element={<SubmitOpportunityPage />} />
+          <Route path="/admin" element={<AdminPage />} />
         </Routes>
       </main>
     </BrowserRouter>

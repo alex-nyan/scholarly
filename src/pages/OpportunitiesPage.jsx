@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { getAcceptedSubmissions } from "../data/submissionsStore";
 
 const DEFAULT_URL = "/opportunities.json";
 
@@ -9,8 +10,23 @@ function normalizeOpportunities(payload) {
   return payload.results;
 }
 
+/** Map accepted submission to same shape as feed item for display. */
+function submissionToOpportunity(sub) {
+  const message = [sub.title, sub.description].filter(Boolean).join("\n\n");
+  return {
+    id: sub.id,
+    message,
+    source: sub.organizationName || "Community",
+    permalink_url: sub.link || null,
+    created_time: sub.createdAt,
+    submitted: true,
+    category: sub.category,
+  };
+}
+
 export default function OpportunitiesPage() {
-  const [opportunities, setOpportunities] = useState([]);
+  const [feedOpportunities, setFeedOpportunities] = useState([]);
+  const [acceptedSubmissions, setAcceptedSubmissions] = useState([]);
   const [query, setQuery] = useState("");
   const [status, setStatus] = useState({
     loading: true,
@@ -20,7 +36,7 @@ export default function OpportunitiesPage() {
 
   useEffect(() => {
     let isMounted = true;
-    setStatus({ loading: true, error: "", source: DEFAULT_URL });
+    setStatus((s) => ({ ...s, loading: true, error: "" }));
     fetch(DEFAULT_URL)
       .then((response) => {
         if (!response.ok) {
@@ -30,12 +46,12 @@ export default function OpportunitiesPage() {
       })
       .then((payload) => {
         if (!isMounted) return;
-        setOpportunities(normalizeOpportunities(payload));
+        setFeedOpportunities(normalizeOpportunities(payload));
         setStatus({ loading: false, error: "", source: DEFAULT_URL });
       })
       .catch((error) => {
         if (!isMounted) return;
-        setOpportunities([]);
+        setFeedOpportunities([]);
         setStatus({ loading: false, error: error.message, source: DEFAULT_URL });
       });
     return () => {
@@ -43,15 +59,30 @@ export default function OpportunitiesPage() {
     };
   }, []);
 
+  useEffect(() => {
+    setAcceptedSubmissions(getAcceptedSubmissions());
+    const onStorage = () => setAcceptedSubmissions(getAcceptedSubmissions());
+    window.addEventListener("storage", onStorage);
+    return () => window.removeEventListener("storage", onStorage);
+  }, []);
+
+  const opportunities = useMemo(() => {
+    const fromFeed = feedOpportunities.map((item) => ({ ...item, submitted: false }));
+    const fromSubmissions = acceptedSubmissions.map(submissionToOpportunity);
+    return [...fromSubmissions, ...fromFeed];
+  }, [feedOpportunities, acceptedSubmissions]);
+
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
     if (!needle) return opportunities;
     return opportunities.filter((item) => {
       const message = item.message || "";
       const source = item.source || "";
+      const category = item.category || "";
       return (
         message.toLowerCase().includes(needle) ||
-        source.toLowerCase().includes(needle)
+        source.toLowerCase().includes(needle) ||
+        category.toLowerCase().includes(needle)
       );
     });
   }, [opportunities, query]);
@@ -90,14 +121,22 @@ export default function OpportunitiesPage() {
 
       <section className="grid">
         {filtered.map((item, index) => (
-          <article className="card" key={`${item.permalink_url}-${index}`}>
+          <article
+            className={`card ${item.submitted ? "card--submitted" : ""}`}
+            key={item.id || `${item.permalink_url}-${index}`}
+          >
             <div className="card-header">
               <h2>{item.source || "Unknown source"}</h2>
-              {item.created_time && (
-                <time dateTime={item.created_time}>
-                  {new Date(item.created_time).toLocaleDateString()}
-                </time>
-              )}
+              <div className="card-meta">
+                {item.submitted && (
+                  <span className="card-badge">Community</span>
+                )}
+                {item.created_time && (
+                  <time dateTime={item.created_time}>
+                    {new Date(item.created_time).toLocaleDateString()}
+                  </time>
+                )}
+              </div>
             </div>
             <p className="message">{item.message}</p>
             {item.permalink_url && (
@@ -107,7 +146,7 @@ export default function OpportunitiesPage() {
                 target="_blank"
                 rel="noreferrer"
               >
-                View original post
+                {item.submitted ? "View link" : "View original post"}
               </a>
             )}
           </article>
