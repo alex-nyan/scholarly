@@ -8,6 +8,12 @@ const FEATURES = [
     icon: "◇",
   },
   {
+    to: "/scholarships",
+    title: "Scholarships",
+    description: "Browse funding opportunities from DAAD and other scraped sources. View details and official links.",
+    icon: "★",
+  },
+  {
     to: "/pathfinder",
     title: "Path Finder",
     description: "Answer 20 short questions and get a personalized suggestion: GED, OSSD, IGCSE, A-Levels, or Myanmar Matriculation.",

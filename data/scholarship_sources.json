@@ -1,0 +1,29 @@
+[
+  {
+    "name": "Bold.org",
+    "url": "https://bold.org/scholarships/"
+  },
+  {
+    "name": "Appily",
+    "url": "https://www.appily.com/scholarships"
+  },
+  {
+    "name": "Scholars4Dev",
+    "url": "https://www.scholars4dev.com/"
+  },
+  {
+    "name": "DAAD Germany (Singapore)",
+    "url": "https://www.daad-singapore.org/en/find-funding/scholarship-database/",
+    "group": "DAAD"
+  },
+  {
+    "name": "DAAD Indonesia / ASEAN",
+    "url": "https://www.daad-indonesia.org/en/find-funding/scholarship-database/",
+    "group": "DAAD"
+  },
+  {
+    "name": "DAAD Vietnam",
+    "url": "https://www.daad-vietnam.org/en/find-funding/scholarship-database/",
+    "group": "DAAD"
+  }
+]

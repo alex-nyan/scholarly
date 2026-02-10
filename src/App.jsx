@@ -6,6 +6,8 @@ import SubmitOpportunityPage from "./pages/SubmitOpportunityPage";
 import AdminPage from "./pages/AdminPage";
 import CommunityPage from "./pages/CommunityPage";
 import CommunityPostPage from "./pages/CommunityPostPage";
+import ScholarshipsPage from "./pages/ScholarshipsPage";
+import ScholarshipDetailPage from "./pages/ScholarshipDetailPage";
 
 export default function App() {
   return (
@@ -19,6 +21,7 @@ export default function App() {
             Home
           </NavLink>
           <NavLink to="/opportunities">Opportunities</NavLink>
+          <NavLink to="/scholarships">Scholarships</NavLink>
           <NavLink to="/pathfinder">Path Finder</NavLink>
           <NavLink to="/community">Community</NavLink>
           <NavLink to="/submit">Submit</NavLink>
@@ -29,6 +32,8 @@ export default function App() {
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/opportunities" element={<OpportunitiesPage />} />
+          <Route path="/scholarships" element={<ScholarshipsPage />} />
+          <Route path="/scholarships/:id" element={<ScholarshipDetailPage />} />
           <Route path="/pathfinder" element={<PathFinderQuiz />} />
           <Route path="/community" element={<CommunityPage />} />
           <Route path="/community/:id" element={<CommunityPostPage />} />
