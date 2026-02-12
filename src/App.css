@@ -184,6 +184,216 @@ h1 {
   font-weight: 600;
 }
 
+.nav-login {
+  color: #555;
+  font-weight: 500;
+}
+
+.btn-nav-signup {
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  background: #2a4dff;
+  color: #fff;
+  border: none;
+  text-decoration: none;
+}
+
+.btn-nav-signup:hover {
+  background: #1e3ddb;
+  color: #fff;
+}
+
+.nav-user-wrap {
+  position: relative;
+}
+
+.nav-user-btn {
+  background: none;
+  border: 1px solid #c8c8d4;
+  padding: 8px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+  max-width: 180px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.nav-user-btn:hover {
+  border-color: #2a4dff;
+  color: #2a4dff;
+}
+
+.nav-user-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+}
+
+.nav-user-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  margin-top: 4px;
+  background: #fff;
+  border-radius: 8px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 8px 0;
+  min-width: 160px;
+  z-index: 20;
+}
+
+.nav-user-menu a,
+.nav-user-menu button {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  text-align: left;
+  border: none;
+  background: none;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.nav-user-menu a:hover,
+.nav-user-menu button:hover {
+  background: #f0f0f5;
+  color: #2a4dff;
+}
+
+/* Auth & Profile pages */
+.auth-page,
+.profile-page {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 80px;
+  min-height: 60vh;
+}
+
+.auth-card,
+.profile-card {
+  width: 100%;
+  max-width: 400px;
+  background: #fff;
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+}
+
+.auth-card h1,
+.profile-card h1 {
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.auth-subtitle,
+.profile-email {
+  color: #666;
+  font-size: 14px;
+  margin-bottom: 24px;
+}
+
+.profile-hint {
+  color: #555;
+  font-size: 14px;
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.auth-error {
+  color: #b30000;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.profile-success {
+  color: #0d7d0d;
+  font-size: 14px;
+  margin-bottom: 16px;
+}
+
+.auth-form,
+.profile-form {
+  display: grid;
+  gap: 16px;
+}
+
+.auth-form label,
+.profile-form label {
+  font-size: 13px;
+  font-weight: 500;
+  color: #444;
+}
+
+.auth-form input,
+.profile-form input,
+.profile-form select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #c8c8d4;
+  font-size: 15px;
+}
+
+.auth-footer {
+  margin-top: 24px;
+  font-size: 14px;
+  color: #666;
+}
+
+.auth-footer a {
+  color: #2a4dff;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+/* Recommended scholarships */
+.recommended-cta {
+  margin-bottom: 24px;
+}
+
+.recommended-cta .btn-secondary {
+  display: inline-block;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 1px solid #2a4dff;
+  color: #2a4dff;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.recommended-cta .btn-secondary:hover {
+  background: #e8ecff;
+}
+
+.recommended-section {
+  margin-bottom: 40px;
+  padding-bottom: 32px;
+  border-bottom: 1px solid #e0e0e8;
+}
+
+.recommended-title {
+  font-size: 22px;
+  margin-bottom: 4px;
+}
+
+.recommended-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 20px;
+}
+
+.recommended-grid {
+  margin-top: 8px;
+}
+
 /* Home page */
 .home {
   min-height: 100vh;

@@ -34,6 +34,8 @@ npm install
 npm run dev
 ```
 
+**Auth (MVP):** Login and profile use `localStorage` only (no backend). Sign up, set your profile (age, education level) on the Profile page, then visit Scholarships to see "Recommended for you." **Admin:** Only the user with email `admin@scholarly.local` gets the Admin nav link and can access `/admin`; others are redirected.
+
 ## Configuration
 
 - `data/sources.json`: list of Facebook Pages to query.
