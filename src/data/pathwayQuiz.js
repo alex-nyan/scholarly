@@ -28,205 +28,141 @@ export const PATHWAY_DESCRIPTIONS = {
     "UK A-Levels. Focus on 2–3 subjects in depth. Strong for UK and Commonwealth university entry.",
 };
 
-// Each question: id, text, options. Each option: label, scores = { pathwayKey: points }
+// --- Quiz (10 questions) ---
+// Each question: id, text, options.
+// Each option: label, scores = { pathwayKey: points }, profile = partial profile fields for scholarship matching.
 export const QUIZ_QUESTIONS = [
   {
-    id: 1,
-    text: "What is your current education level?",
+    id: "study_destination",
+    text: "Which country/region are you aiming to study in next?",
     options: [
-      { label: "Grade 8 or below", scores: { myanmar: 2, ged: 1, ossd: 1 } },
-      { label: "Grade 9–10", scores: { myanmar: 2, igcse: 2, ossd: 1, alevel: 0 } },
-      { label: "Grade 11+", scores: { myanmar: 2, alevel: 2, ossd: 1, ged: 0 } },
-      { label: "Finished high school (need equivalency)", scores: { ged: 3, ossd: 1 } },
+      {
+        label: "Myanmar",
+        scores: { myanmar: 3 },
+        profile: { study_destination: "MYANMAR" },
+      },
+      {
+        label: "USA / Canada",
+        scores: { ged: 2, ossd: 2 },
+        profile: { study_destination: "USA_CANADA" },
+      },
+      {
+        label: "UK / Australia / Commonwealth",
+        scores: { igcse: 2, alevel: 2, ossd: 1 },
+        profile: { study_destination: "UK_COMMONWEALTH" },
+      },
+      {
+        label: "Not sure yet",
+        scores: { igcse: 1, ossd: 1, myanmar: 1, ged: 1, alevel: 1 },
+        profile: { study_destination: "ANY" },
+      },
     ],
   },
   {
-    id: 2,
-    text: "What is your main goal?",
+    id: "current_level",
+    text: "What best describes where you are right now?",
     options: [
-      { label: "Study at a Myanmar university", scores: { myanmar: 3 } },
-      { label: "Study abroad (UK, Australia, etc.)", scores: { igcse: 2, alevel: 2, ossd: 1 } },
-      { label: "Study in USA or Canada", scores: { ged: 2, ossd: 2 } },
-      { label: "Get a recognized certificate for work", scores: { ged: 2, ossd: 1 } },
-      { label: "Not sure yet", scores: { igcse: 1, ossd: 1, myanmar: 1 } },
+      {
+        label: "Still in school (Grade 8–10)",
+        scores: { myanmar: 2, igcse: 2, ossd: 1 },
+        profile: { education_level: "High School" },
+      },
+      {
+        label: "Still in school (Grade 11–12)",
+        scores: { myanmar: 2, alevel: 2, igcse: 1, ossd: 1 },
+        profile: { education_level: "High School" },
+      },
+      {
+        label: "Finished high school (need an alternative pathway)",
+        scores: { ged: 3, ossd: 2 },
+        profile: { education_level: "High School" },
+      },
+      {
+        label: "Already in university (want to transfer or apply abroad)",
+        scores: { ossd: 1, igcse: 1, alevel: 1 },
+        profile: { education_level: "Undergraduate" },
+      },
     ],
   },
   {
-    id: 3,
-    text: "How do you prefer to learn?",
+    id: "target_degree",
+    text: "What level are you aiming for next?",
     options: [
-      { label: "Exams at the end of the year", scores: { myanmar: 2, igcse: 2, alevel: 2 } },
-      { label: "Mix of coursework and exams", scores: { ossd: 2, igcse: 1 } },
-      { label: "Mainly projects and credits", scores: { ossd: 3 } },
-      { label: "Self-paced, when I'm ready", scores: { ged: 3, ossd: 1 } },
+      { label: "High school completion", scores: { myanmar: 1, igcse: 1, ossd: 1, ged: 1 }, profile: { target_degree: "High School" } },
+      { label: "Undergraduate (Bachelor’s)", scores: { alevel: 1, igcse: 1, ossd: 1, ged: 1 }, profile: { target_degree: "Undergraduate" } },
+      { label: "Graduate (Master’s/PhD)", scores: { alevel: 1, igcse: 1, ossd: 1, ged: 1 }, profile: { target_degree: "Graduate" } },
+      { label: "Not sure", scores: {}, profile: { target_degree: "Any" } },
     ],
   },
   {
-    id: 4,
-    text: "What is your timeline to finish?",
+    id: "timeline",
+    text: "How quickly do you want to finish your next qualification?",
     options: [
-      { label: "Within 1 year", scores: { ged: 2, ossd: 1 } },
-      { label: "1–2 years", scores: { igcse: 2, ossd: 2, alevel: 1 } },
-      { label: "2+ years", scores: { myanmar: 2, alevel: 2, igcse: 1 } },
-      { label: "No rush", scores: { ged: 2, ossd: 1 } },
+      { label: "As fast as possible (under 1 year)", scores: { ged: 3, ossd: 1 }, profile: { timeline: "FAST" } },
+      { label: "1–2 years", scores: { ossd: 2, igcse: 2, alevel: 1 }, profile: { timeline: "MEDIUM" } },
+      { label: "2+ years (structured path)", scores: { myanmar: 2, alevel: 2, igcse: 1 }, profile: { timeline: "LONG" } },
+      { label: "No strict deadline", scores: { ossd: 1, ged: 1, igcse: 1 }, profile: { timeline: "FLEXIBLE" } },
     ],
   },
   {
-    id: 5,
-    text: "Where do you plan to study after this qualification?",
+    id: "learning_style",
+    text: "What learning style fits you best?",
     options: [
-      { label: "Stay in Myanmar", scores: { myanmar: 3 } },
-      { label: "UK, Australia, or Commonwealth", scores: { igcse: 2, alevel: 2 } },
-      { label: "USA or Canada", scores: { ged: 2, ossd: 2 } },
-      { label: "Not decided", scores: { igcse: 1, ossd: 1 } },
+      { label: "Exam-focused (I perform well in exams)", scores: { myanmar: 2, igcse: 2, alevel: 2 }, profile: { learning_style: "EXAM" } },
+      { label: "Coursework + exams (balanced)", scores: { ossd: 2, igcse: 1 }, profile: { learning_style: "BALANCED" } },
+      { label: "Credit-based / projects (continuous assessment)", scores: { ossd: 3 }, profile: { learning_style: "COURSEWORK" } },
+      { label: "Self-paced / flexible schedule", scores: { ged: 3, ossd: 1 }, profile: { learning_style: "FLEX" } },
     ],
   },
   {
-    id: 6,
-    text: "What is your budget for tuition and exams?",
+    id: "schedule",
+    text: "How much time can you realistically study each week?",
     options: [
-      { label: "Very limited", scores: { myanmar: 2, ged: 1 } },
-      { label: "Moderate", scores: { igcse: 1, ossd: 1 } },
-      { label: "Can invest in quality", scores: { alevel: 2, igcse: 2, ossd: 1 } },
-      { label: "Not a main concern", scores: { alevel: 1, igcse: 1, ossd: 1 } },
+      { label: "Under 10 hours (very limited)", scores: { ged: 2, ossd: 1 }, profile: { schedule: "LOW" } },
+      { label: "10–20 hours (part-time)", scores: { ossd: 2, ged: 1 }, profile: { schedule: "MEDIUM" } },
+      { label: "20–30 hours", scores: { igcse: 1, alevel: 1, myanmar: 1 }, profile: { schedule: "HIGH" } },
+      { label: "30+ hours (full-time)", scores: { myanmar: 2, igcse: 2, alevel: 2 }, profile: { schedule: "FULL_TIME" } },
     ],
   },
   {
-    id: 7,
-    text: "Do you prefer studying many subjects or focusing on a few?",
+    id: "english",
+    text: "How comfortable are you studying in English?",
     options: [
-      { label: "Many subjects (broad)", scores: { igcse: 2, myanmar: 1, ossd: 1 } },
-      { label: "3–4 subjects", scores: { igcse: 2, ossd: 1 } },
-      { label: "2–3 subjects in depth", scores: { alevel: 3 } },
-      { label: "One area only", scores: { ged: 1, ossd: 1 } },
+      { label: "Beginner", scores: { myanmar: 2 }, profile: { english: "BEGINNER" } },
+      { label: "Intermediate", scores: { igcse: 1, ossd: 1 }, profile: { english: "INTERMEDIATE" } },
+      { label: "Strong", scores: { igcse: 2, alevel: 2, ossd: 1, ged: 1 }, profile: { english: "STRONG" } },
+      { label: "Native / bilingual", scores: { alevel: 1, igcse: 1, ossd: 1, ged: 1 }, profile: { english: "NATIVE" } },
     ],
   },
   {
-    id: 8,
-    text: "How is your English?",
+    id: "recognition",
+    text: "How important is Myanmar-local recognition for you?",
     options: [
-      { label: "Beginner", scores: { myanmar: 2 } },
-      { label: "Intermediate", scores: { igcse: 1, ossd: 1 } },
-      { label: "Strong", scores: { igcse: 2, alevel: 2, ossd: 1, ged: 1 } },
-      { label: "Native or bilingual", scores: { alevel: 1, igcse: 1, ossd: 1, ged: 1 } },
+      { label: "Essential (must work locally)", scores: { myanmar: 3 }, profile: { recognition: "LOCAL" } },
+      { label: "Nice to have", scores: { myanmar: 2 }, profile: { recognition: "PREFER_LOCAL" } },
+      { label: "Prefer international", scores: { igcse: 1, alevel: 1, ossd: 1 }, profile: { recognition: "INTERNATIONAL" } },
+      { label: "International only", scores: { ged: 1, ossd: 1, igcse: 1, alevel: 1 }, profile: { recognition: "INTERNATIONAL_ONLY" } },
     ],
   },
   {
-    id: 9,
-    text: "Do you need a qualification recognized in Myanmar?",
+    id: "budget",
+    text: "What’s your budget for tuition/exams right now?",
     options: [
-      { label: "Yes, essential", scores: { myanmar: 3 } },
-      { label: "Prefer yes", scores: { myanmar: 2 } },
-      { label: "Prefer international", scores: { igcse: 1, alevel: 1, ossd: 1 } },
-      { label: "International only", scores: { ged: 1, ossd: 1, igcse: 1, alevel: 1 } },
+      { label: "Very limited", scores: { myanmar: 2, ged: 1 }, profile: { budget: "LOW" } },
+      { label: "Moderate", scores: { igcse: 1, ossd: 1 }, profile: { budget: "MEDIUM" } },
+      { label: "Can invest in quality", scores: { alevel: 2, igcse: 2, ossd: 1 }, profile: { budget: "HIGH" } },
+      { label: "Not a main concern", scores: { alevel: 1, igcse: 1, ossd: 1 }, profile: { budget: "ANY" } },
     ],
   },
   {
-    id: 10,
-    text: "Are you working or have other commitments?",
+    id: "field",
+    text: "What subject area do you want to focus on?",
     options: [
-      { label: "Yes, I need a flexible schedule", scores: { ged: 3, ossd: 2 } },
-      { label: "Part-time", scores: { ossd: 2, ged: 1 } },
-      { label: "No, I can study full-time", scores: { myanmar: 1, igcse: 1, alevel: 1 } },
-    ],
-  },
-  {
-    id: 11,
-    text: "Where would you prefer to take exams?",
-    options: [
-      { label: "In Myanmar only", scores: { myanmar: 2, ged: 1 } },
-      { label: "Willing to travel if needed", scores: { igcse: 1, alevel: 1 } },
-      { label: "Online only", scores: { ossd: 2, ged: 1 } },
-      { label: "Either", scores: { ossd: 1, igcse: 1 } },
-    ],
-  },
-  {
-    id: 12,
-    text: "Which subjects interest you most?",
-    options: [
-      { label: "STEM (science, math, tech)", scores: { alevel: 2, igcse: 1, myanmar: 1 } },
-      { label: "Arts & humanities", scores: { igcse: 2, ossd: 1 } },
-      { label: "Business", scores: { igcse: 1, ossd: 2 } },
-      { label: "Mixed", scores: { igcse: 2, myanmar: 1, ossd: 1 } },
-    ],
-  },
-  {
-    id: 13,
-    text: "Have you already started a curriculum?",
-    options: [
-      { label: "No", scores: {} },
-      { label: "Yes, Myanmar system", scores: { myanmar: 3 } },
-      { label: "Yes, international (e.g. IGCSE)", scores: { igcse: 2, alevel: 2 } },
-      { label: "Dropped out, want to restart", scores: { ged: 2, ossd: 1 } },
-    ],
-  },
-  {
-    id: 14,
-    text: "What type of recognition matters most to you?",
-    options: [
-      { label: "Myanmar government / local universities", scores: { myanmar: 3 } },
-      { label: "UK / Commonwealth universities", scores: { igcse: 2, alevel: 2 } },
-      { label: "US / Canadian universities", scores: { ged: 2, ossd: 2 } },
-      { label: "Any internationally recognized", scores: { igcse: 1, alevel: 1, ossd: 1, ged: 1 } },
-    ],
-  },
-  {
-    id: 15,
-    text: "How many hours per week can you study?",
-    options: [
-      { label: "Under 10 hours", scores: { ged: 2, ossd: 1 } },
-      { label: "10–20 hours", scores: { ossd: 2, ged: 1 } },
-      { label: "20–30 hours", scores: { igcse: 1, alevel: 1, myanmar: 1 } },
-      { label: "30+ hours (full-time)", scores: { myanmar: 2, igcse: 2, alevel: 2 } },
-    ],
-  },
-  {
-    id: 16,
-    text: "Do you prefer online, in-person, or hybrid?",
-    options: [
-      { label: "Online only", scores: { ossd: 2, ged: 2 } },
-      { label: "In-person only", scores: { myanmar: 2 } },
-      { label: "Hybrid", scores: { igcse: 1, ossd: 1 } },
-      { label: "No preference", scores: {} },
-    ],
-  },
-  {
-    id: 17,
-    text: "Are you aiming for a scholarship abroad?",
-    options: [
-      { label: "Yes, UK / Commonwealth", scores: { alevel: 2, igcse: 2 } },
-      { label: "Yes, USA", scores: { ged: 1, ossd: 1 } },
-      { label: "Yes, Myanmar", scores: { myanmar: 2 } },
-      { label: "No / Not sure", scores: {} },
-    ],
-  },
-  {
-    id: 18,
-    text: "How do you feel about standardized exams?",
-    options: [
-      { label: "I prefer to avoid them", scores: { ossd: 2, ged: 1 } },
-      { label: "Okay with some exams", scores: { igcse: 1, myanmar: 1 } },
-      { label: "I'm good at exams", scores: { myanmar: 2, igcse: 2, alevel: 2 } },
-    ],
-  },
-  {
-    id: 19,
-    text: "What describes your situation best?",
-    options: [
-      { label: "Young student still in school", scores: { myanmar: 2, igcse: 2 } },
-      { label: "Older, returning to education", scores: { ged: 2, ossd: 1 } },
-      { label: "Need a quick certificate", scores: { ged: 2 } },
-      { label: "Planning long-term for university", scores: { alevel: 2, igcse: 1, myanmar: 1 } },
-    ],
-  },
-  {
-    id: 20,
-    text: "Would you consider studying outside Myanmar for the program?",
-    options: [
-      { label: "No, must be in Myanmar", scores: { myanmar: 2 } },
-      { label: "Yes, if it's online", scores: { ossd: 2, ged: 1, igcse: 0 } },
-      { label: "Yes, short courses abroad", scores: { igcse: 1, alevel: 1 } },
-      { label: "Yes, full program abroad", scores: { alevel: 2, igcse: 2, ossd: 1 } },
+      { label: "STEM (science / tech / engineering / math)", scores: { alevel: 1, igcse: 1, myanmar: 1 }, profile: { field: "STEM" } },
+      { label: "Arts / Design / Humanities", scores: { igcse: 1, ossd: 1 }, profile: { field: "ARTS" } },
+      { label: "Business / Economics", scores: { ossd: 1, igcse: 1 }, profile: { field: "BUSINESS" } },
+      { label: "Health / Medicine / Nursing", scores: { alevel: 1, igcse: 1 }, profile: { field: "HEALTH" } },
+      { label: "Not sure", scores: {}, profile: { field: "ANY" } },
     ],
   },
 ];
@@ -243,4 +179,97 @@ export function computeScores(answers) {
   return Object.entries(totals)
     .sort((a, b) => b[1] - a[1])
     .map(([key, score]) => ({ pathway: key, score }));
+}
+
+export function buildStudentProfile(answers) {
+  const profile = {
+    study_destination: "ANY",
+    education_level: "Any",
+    target_degree: "Any",
+    field: "ANY",
+    timeline: "FLEXIBLE",
+    learning_style: "BALANCED",
+    schedule: "MEDIUM",
+    english: "INTERMEDIATE",
+    recognition: "INTERNATIONAL",
+    budget: "MEDIUM",
+  };
+
+  for (const answer of answers) {
+    if (!answer?.profile) continue;
+    Object.assign(profile, answer.profile);
+  }
+
+  // Prefer target_degree when it provides a clear education level for scholarships.
+  if (profile.target_degree && profile.target_degree !== "Any") {
+    profile.education_level = profile.target_degree;
+  }
+
+  return profile;
+}
+
+export function explainTopPathway(answers, topPathway) {
+  const contributions = answers
+    .map((answer, idx) => {
+      const pts = answer?.scores?.[topPathway] ?? 0;
+      const q = QUIZ_QUESTIONS[idx];
+      return {
+        idx,
+        points: pts,
+        question: q?.text || "Question",
+        choice: answer?.label || "—",
+      };
+    })
+    .filter((c) => c.points > 0)
+    .sort((a, b) => b.points - a.points);
+
+  const topReasons = contributions.slice(0, 4);
+  if (topReasons.length === 0) {
+    return ["Your answers were mixed, so we chose the closest overall fit."];
+  }
+
+  return topReasons.map((r) => `${r.question} — you chose “${r.choice}”.`);
+}
+
+function normalizeToSet(value) {
+  if (!value) return new Set();
+  if (Array.isArray(value)) return new Set(value.map((v) => String(v).trim()).filter(Boolean));
+  return new Set(String(value).split(",").map((v) => v.trim()).filter(Boolean));
+}
+
+function matchesEducationLevel(profileLevel, scholarshipLevelsSet) {
+  if (!profileLevel || profileLevel === "Any") return true;
+  if (!scholarshipLevelsSet || scholarshipLevelsSet.size === 0) return true;
+  const normalized = profileLevel.toLowerCase();
+  const levels = Array.from(scholarshipLevelsSet).map((s) => s.toLowerCase());
+  if (levels.some((l) => l === "any")) return true;
+  return levels.some((l) => l.includes(normalized) || normalized.includes(l));
+}
+
+export function filterEligibleScholarships(scholarships, profile) {
+  const desiredDestination = profile?.study_destination || "ANY";
+  const desiredField = profile?.field || "ANY";
+  const desiredEducation = profile?.education_level || "Any";
+
+  return scholarships.filter((s) => {
+    const destinations = normalizeToSet(s.study_destinations);
+    const fields = normalizeToSet(s.fields);
+    const levels = normalizeToSet(s.education_levels || s.education_level);
+
+    const destinationOk =
+      desiredDestination === "ANY" ||
+      destinations.size === 0 ||
+      destinations.has("ANY") ||
+      destinations.has(desiredDestination);
+
+    const fieldOk =
+      desiredField === "ANY" ||
+      fields.size === 0 ||
+      fields.has("ANY") ||
+      fields.has(desiredField);
+
+    const educationOk = matchesEducationLevel(desiredEducation, levels);
+
+    return destinationOk && fieldOk && educationOk;
+  });
 }

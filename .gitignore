@@ -7,7 +7,6 @@ node_modules
 .env.development
 .env.test
 .env.production
-scholarships.csv
 .DS_Store
 .vscode
 __pycache__

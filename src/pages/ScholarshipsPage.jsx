@@ -135,7 +135,7 @@ export default function ScholarshipsPage() {
           <p className="eyebrow">Scholarship database</p>
           <h1>Scholarships</h1>
           <p className="subtitle">
-            Browse funding opportunities from scraped sources. Click a card to view details and visit the official page.
+            Browse sample scholarships stored in JSON. Click a card to view details and explore the project.
           </p>
         </div>
         <div className="scholarships-controls">
