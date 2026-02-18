@@ -2,7 +2,17 @@ const USERS_KEY = "scholarly_users";
 const SESSION_KEY = "scholarly_session";
 const PROFILES_KEY = "scholarly_profiles";
 
-const ADMIN_EMAIL = "admin@scholarly.local";
+/** Emails that get admin role and can see the Admin dashboard / Mod badge. */
+const ADMIN_EMAILS = ["kaungpyaehtet2007@gmail.com"].map((e) => e.toLowerCase());
+
+/** Use for Mod badge: is this email an admin? */
+export function isAdminEmail(email) {
+  if (!email) return false;
+  return ADMIN_EMAILS.includes(email.trim().toLowerCase());
+}
+
+/** @deprecated Use isAdminEmail() for checks. Kept for backward compatibility (Mod badge). */
+export const ADMIN_EMAIL = ADMIN_EMAILS[0];
 
 function getUsers() {
   try {
@@ -54,7 +64,8 @@ function setSession(session) {
 }
 
 function roleForEmail(email) {
-  return email === ADMIN_EMAIL ? "admin" : "user";
+  if (!email) return "user";
+  return isAdminEmail(email) ? "admin" : "user";
 }
 
 export function getStoredAuth() {

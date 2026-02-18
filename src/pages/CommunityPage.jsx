@@ -1,18 +1,42 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { Link } from "react-router-dom";
-import { getPosts, addPost, getReplyCount } from "../data/communityStore";
+import {
+  getPosts,
+  addPost,
+  getReplyCount,
+  getScoresForTargets,
+} from "../data/communityStore";
+import { useAuth } from "../context/AuthContext";
+import { isAdminEmail } from "../api/auth";
+import CommunityVote from "../components/CommunityVote";
 
 export default function CommunityPage() {
+  const { user } = useAuth();
   const [posts, setPosts] = useState([]);
+  const [scoreMap, setScoreMap] = useState({});
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", body: "", author: "" });
   const [error, setError] = useState("");
 
-  const refresh = () => setPosts(getPosts());
+  const refresh = () => {
+    const list = getPosts();
+    setPosts(list);
+    const ids = list.map((p) => p.id);
+    setScoreMap(getScoresForTargets("post", ids));
+  };
 
   useEffect(() => {
     refresh();
   }, []);
+
+  const sortedPosts = useMemo(() => {
+    return [...posts].sort((a, b) => {
+      const scoreA = scoreMap[a.id] ?? 0;
+      const scoreB = scoreMap[b.id] ?? 0;
+      if (scoreB !== scoreA) return scoreB - scoreA;
+      return new Date(b.createdAt) - new Date(a.createdAt);
+    });
+  }, [posts, scoreMap]);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -30,7 +54,8 @@ export default function CommunityPage() {
     addPost({
       title,
       body: form.body.trim(),
-      author: form.author.trim(),
+      author: form.author.trim() || "Anonymous",
+      authorEmail: user?.email || null,
     });
     setForm({ title: "", body: "", author: "" });
     setShowForm(false);
@@ -46,6 +71,9 @@ export default function CommunityPage() {
           Ask questions and help other students by answering. Topics can be
           academics, pathways, volunteering, or anything related to youth
           opportunities in Myanmar.
+        </p>
+        <p className="community-vote-hint">
+          Vote with ↑ / ↓ — higher scores rise. Sign in to vote; Mod & verified users’ votes count more.
         </p>
       </header>
 
@@ -106,8 +134,13 @@ export default function CommunityPage() {
           </div>
         ) : (
           <ul className="post-list">
-            {posts.map((post) => (
-              <li key={post.id}>
+            {sortedPosts.map((post) => (
+              <li key={post.id} className="post-list-item">
+                <CommunityVote
+                  targetType="post"
+                  targetId={post.id}
+                  onAfterVote={refresh}
+                />
                 <Link to={`/community/${post.id}`} className="post-card card">
                   <h3 className="post-card-title">{post.title}</h3>
                   {post.body && (
@@ -117,7 +150,12 @@ export default function CommunityPage() {
                     </p>
                   )}
                   <div className="post-card-meta">
-                    <span className="post-card-author">{post.author}</span>
+                    <span className="post-card-author">
+                      {post.author}
+                      {isAdminEmail(post.authorEmail) && (
+                        <span className="post-badge post-badge--mod" title="Moderator">Mod</span>
+                      )}
+                    </span>
                     <span className="post-card-date">
                       {new Date(post.createdAt).toLocaleDateString()}
                     </span>

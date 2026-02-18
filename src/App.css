@@ -979,6 +979,12 @@ h1 {
   max-width: 560px;
 }
 
+.community-vote-hint {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #64748b;
+}
+
 .community-actions {
   margin-bottom: 20px;
 }
@@ -1082,6 +1088,95 @@ h1 {
   font-weight: 500;
 }
 
+/* Reddit-style voting */
+.community-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+  min-width: 36px;
+}
+
+.community-vote-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 24px;
+  padding: 0;
+  border: none;
+  background: transparent;
+  color: #878a8c;
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  border-radius: 4px;
+  transition: color 0.15s, background 0.15s;
+}
+
+.community-vote-btn:hover:not(:disabled) {
+  color: #1c1c1c;
+  background: #e4e4e4;
+}
+
+.community-vote-btn:disabled {
+  cursor: default;
+  opacity: 0.6;
+}
+
+.community-vote-up.is-active {
+  color: #ff4500;
+}
+
+.community-vote-up:hover:not(:disabled) {
+  color: #ff4500;
+}
+
+.community-vote-down.is-active {
+  color: #7193ff;
+}
+
+.community-vote-down:hover:not(:disabled) {
+  color: #7193ff;
+}
+
+.community-vote-score {
+  font-size: 12px;
+  font-weight: 600;
+  color: #1c1c1c;
+  min-width: 1.5em;
+  text-align: center;
+}
+
+.post-list-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.post-list-item .post-card {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-badge {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-radius: 4px;
+  vertical-align: middle;
+}
+
+.post-badge--mod {
+  background: #ff4500;
+  color: #fff;
+}
+
 /* Community post detail */
 .community-breadcrumb {
   margin-bottom: 20px;
@@ -1089,6 +1184,21 @@ h1 {
 
 .community-post {
   margin-bottom: 28px;
+}
+
+.community-post-with-vote {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.community-post-with-vote .community-vote {
+  margin-top: 4px;
+}
+
+.community-post-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .community-post-title {
@@ -1136,6 +1246,21 @@ h1 {
 
 .reply-card {
   border-left: 4px solid #e8e8ee;
+}
+
+.reply-card-with-vote {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.reply-card-with-vote .community-vote {
+  margin-top: 2px;
+}
+
+.reply-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .reply-body {

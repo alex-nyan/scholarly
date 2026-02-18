@@ -1,27 +1,49 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   getPost,
   getReplies,
   addReply,
+  getScoresForTargets,
 } from "../data/communityStore";
+import { useAuth } from "../context/AuthContext";
+import { isAdminEmail } from "../api/auth";
+import CommunityVote from "../components/CommunityVote";
 
 export default function CommunityPostPage() {
   const { id } = useParams();
+  const { user } = useAuth();
   const [post, setPost] = useState(null);
   const [replies, setReplies] = useState([]);
+  const [scoreMap, setScoreMap] = useState({});
   const [form, setForm] = useState({ body: "", author: "" });
   const [error, setError] = useState("");
 
   const refresh = () => {
     const p = getPost(id);
     setPost(p);
-    setReplies(p ? getReplies(id) : []);
+    const rawReplies = p ? getReplies(id) : [];
+    setReplies(rawReplies);
+    const replyIds = rawReplies.map((r) => r.id);
+    setScoreMap(
+      replyIds.length
+        ? getScoresForTargets("reply", replyIds)
+        : {}
+    );
   };
 
   useEffect(() => {
     refresh();
   }, [id]);
+
+  const sortedReplies = useMemo(() => {
+    return [...replies].sort((a, b) => {
+      const scoreA = scoreMap[a.id] ?? 0;
+      const scoreB = scoreMap[b.id] ?? 0;
+      if (scoreB !== scoreA) return scoreB - scoreA;
+      return new Date(a.createdAt) - new Date(b.createdAt);
+    });
+  }, [replies, scoreMap]);
 
   const handleChange = (field, value) => {
     setForm((prev) => ({ ...prev, [field]: value }));
@@ -39,7 +61,8 @@ export default function CommunityPostPage() {
     addReply({
       postId: id,
       body,
-      author: form.author.trim(),
+      author: form.author.trim() || "Anonymous",
+      authorEmail: user?.email || null,
     });
     setForm({ body: "", author: "" });
     refresh();
@@ -64,17 +87,29 @@ export default function CommunityPostPage() {
         </Link>
       </nav>
 
-      <article className="community-post card">
-        <h1 className="community-post-title">{post.title}</h1>
-        <div className="community-post-meta">
-          <span className="post-author">{post.author}</span>
-          <span className="post-date">
-            {new Date(post.createdAt).toLocaleString()}
-          </span>
+      <article className="community-post card community-post-with-vote">
+        <CommunityVote
+          targetType="post"
+          targetId={post.id}
+          onAfterVote={refresh}
+        />
+        <div className="community-post-content">
+          <h1 className="community-post-title">{post.title}</h1>
+          <div className="community-post-meta">
+            <span className="post-author">
+              {post.author}
+              {isAdminEmail(post.authorEmail) && (
+                <span className="post-badge post-badge--mod" title="Moderator">Mod</span>
+              )}
+            </span>
+            <span className="post-date">
+              {new Date(post.createdAt).toLocaleString()}
+            </span>
+          </div>
+          {post.body && (
+            <div className="community-post-body">{post.body}</div>
+          )}
         </div>
-        {post.body && (
-          <div className="community-post-body">{post.body}</div>
-        )}
       </article>
 
       <section className="community-replies">
@@ -86,14 +121,26 @@ export default function CommunityPostPage() {
 
         {replies.length > 0 && (
           <ul className="reply-list">
-            {replies.map((reply) => (
-              <li key={reply.id} className="reply-card card">
-                <div className="reply-body">{reply.body}</div>
-                <div className="reply-meta">
-                  <span className="reply-author">{reply.author}</span>
-                  <span className="reply-date">
-                    {new Date(reply.createdAt).toLocaleString()}
-                  </span>
+            {sortedReplies.map((reply) => (
+              <li key={reply.id} className="reply-card card reply-card-with-vote">
+                <CommunityVote
+                  targetType="reply"
+                  targetId={reply.id}
+                  onAfterVote={refresh}
+                />
+                <div className="reply-content">
+                  <div className="reply-body">{reply.body}</div>
+                  <div className="reply-meta">
+                    <span className="reply-author">
+                      {reply.author}
+                      {isAdminEmail(reply.authorEmail) && (
+                        <span className="post-badge post-badge--mod" title="Moderator">Mod</span>
+                      )}
+                    </span>
+                    <span className="reply-date">
+                      {new Date(reply.createdAt).toLocaleString()}
+                    </span>
+                  </div>
                 </div>
               </li>
             ))}
