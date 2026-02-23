@@ -83,12 +83,12 @@ export const QUIZ_QUESTIONS = [
   },
   {
     id: 6,
-    text: "What is your budget for tuition and exams?",
+    text: "What is your total budget for the full program (tuition, exams & materials)?",
     options: [
-      { label: "Very limited", scores: { myanmar: 2, ged: 1 } },
-      { label: "Moderate", scores: { igcse: 1, ossd: 1 } },
-      { label: "Can invest in quality", scores: { alevel: 2, igcse: 2, ossd: 1 } },
-      { label: "Not a main concern", scores: { alevel: 1, igcse: 1, ossd: 1 } },
+      { label: "Budget: < $1,000", scores: { myanmar: 2, ged: 1 } },
+      { label: "Mid: $1,000 – $5,000", scores: { igcse: 1, ossd: 1, ged: 1 } },
+      { label: "Premium: $5,000 – $15,000", scores: { alevel: 2, igcse: 2, ossd: 1 } },
+      { label: "High: > $15,000", scores: { alevel: 1, igcse: 1, ossd: 1 } },
     ],
   },
   {
@@ -229,10 +229,46 @@ export const QUIZ_QUESTIONS = [
       { label: "Yes, full program abroad", scores: { alevel: 2, igcse: 2, ossd: 1 } },
     ],
   },
+  {
+    id: 21,
+    text: "How old are you?",
+    // Age is used as a gatekeeper in computeScores — not for scoring points.
+    // The labels must stay exactly as written; computeScores matches on them.
+    options: [
+      { label: "Under 16", scores: {} },
+      { label: "16 or older", scores: {} },
+    ],
+  },
 ];
 
-/** Sum scores from all answers and return pathway keys sorted by total (desc). */
+// =============================================================================
+// COUNSELING BRAIN
+// Gatekeeper indices:
+//   Q1  → answers[0]  — education level  ("Grade 8 or below")
+//   Q21 → answers[20] — age gate         ("Under 16" | "16 or older")
+// =============================================================================
+
+/**
+ * Evaluate quiz answers and return a counseling-driven ranked result set.
+ *
+ * Gatekeeper rules applied BEFORE ranking:
+ *   1. Foundation Gate  — Grade 8 or below AND Under 16    → FOUNDATION_REQUIRED
+ *   2. Fast-Track       — Grade 8 or below AND 16 or older → GED boosted +6
+ *   3. Clamping         — Grade 8 or below (any age)       → ALEVEL & OSSD zeroed
+ *
+ * @param {Array<{label: string, scores: Object}|null>} answers
+ * @returns {{ ranked: Array<{pathway:string, score:number, counselingNote:string}>, flag: string|null }}
+ */
 export function computeScores(answers) {
+  // 1. Read gatekeeper signals
+  const gradeAnswer = answers[0];
+  const ageAnswer = answers[20];
+
+  const isGrade8OrBelow = gradeAnswer?.label === "Grade 8 or below";
+  const isUnder16 = ageAnswer?.label === "Under 16";
+  const is16OrOlder = ageAnswer?.label === "16 or older";
+
+  // 2. Accumulate raw scores from all answers
   const totals = { myanmar: 0, ged: 0, ossd: 0, igcse: 0, alevel: 0 };
   for (const answer of answers) {
     if (!answer || !answer.scores) continue;
@@ -240,7 +276,79 @@ export function computeScores(answers) {
       if (pathway in totals) totals[pathway] += points;
     }
   }
-  return Object.entries(totals)
+
+  // 3. Apply gatekeeper mutations
+  let flag = null;
+  let counselingTag = "standard";
+
+  if (isGrade8OrBelow && isUnder16) {
+    flag = "FOUNDATION_REQUIRED";
+    counselingTag = "foundation";
+    // Suppress all pathways — student not yet eligible
+    for (const key of Object.keys(totals)) totals[key] = 0;
+
+  } else if (isGrade8OrBelow && is16OrOlder) {
+    counselingTag = "fasttrack";
+    totals.ged += 6;   // Fast-Track boost
+    totals.alevel = 0;   // Clamp
+    totals.ossd = 0;   // Clamp
+
+  } else if (isGrade8OrBelow) {
+    // Grade low, age unknown — clamp only
+    totals.alevel = 0;
+    totals.ossd = 0;
+  }
+
+  // 4. Build counseling notes
+  const notes = buildCounselingNotes(counselingTag, { isGrade8OrBelow });
+
+  // 5. Sort and attach notes
+  const ranked = Object.entries(totals)
     .sort((a, b) => b[1] - a[1])
-    .map(([key, score]) => ({ pathway: key, score }));
+    .map(([pathway, score]) => ({
+      pathway,
+      score,
+      counselingNote: notes[pathway] ?? "",
+    }));
+
+  return { ranked, flag };
+}
+
+// -----------------------------------------------------------------------------
+// Counseling Dictionary — Myanmar-specific guidance text
+// Scenarios: "foundation" | "fasttrack" | "standard"
+// -----------------------------------------------------------------------------
+function buildCounselingNotes(scenario, { isGrade8OrBelow }) {
+  if (scenario === "foundation") {
+    return {
+      myanmar: "You are on a foundation path. Completing Grade 9–10 opens every pathway listed here.",
+      ged: "GED becomes available at age 16. For now, focus on catching up through a community learning centre or monastic school.",
+      ossd: "OSSD requires a stronger academic base. Keep studying — you will be eligible in a few years.",
+      igcse: "IGCSE is a great future goal. Build your foundation now and revisit at Grade 9.",
+      alevel: "A-Levels require at least Grade 10 completion. Stay on your current school path.",
+    };
+  }
+
+  if (scenario === "fasttrack") {
+    return {
+      myanmar: "Your age and life experience can complement Myanmar Matriculation. Consider a catch-up programme at a private school.",
+      ged: "GED is your fastest route to an internationally recognised high-school equivalency. Many Myanmar adults complete it in 6–12 months. Strong choice for your situation.",
+      ossd: "OSSD is credit-based and flexible, but works best from a Grade 9 starting point. Pursue GED first, then consider OSSD for university prep.",
+      igcse: "IGCSE is possible but demands solid subject knowledge. Discuss with a counsellor whether direct entry or a bridging course suits you.",
+      alevel: "A-Levels are not recommended at this stage. A GED or IGCSE foundation first will set you up for A-Level success later.",
+    };
+  }
+
+  // standard path
+  const gradeNote = isGrade8OrBelow
+    ? " Confirm your grade level with an academic counsellor before enrolling."
+    : "";
+
+  return {
+    myanmar: `Myanmar Matriculation aligns well with your profile. It provides strong local university recognition.${gradeNote}`,
+    ged: `GED offers flexibility and speed — ideal if you need an accredited qualification quickly or are balancing work and study.${gradeNote}`,
+    ossd: `The Ontario OSSD is credit-based and widely accepted internationally. A strong option for Canada-bound or online learners.${gradeNote}`,
+    igcse: `IGCSE covers a broad subject range and is respected across the UK, Australia, and Southeast Asia.${gradeNote}`,
+    alevel: `A-Levels offer deep subject focus — ideal for STEM or UK university entry. Requires a 2-year commitment.${gradeNote}`,
+  };
 }
