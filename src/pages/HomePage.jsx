@@ -10,7 +10,7 @@ const FEATURES = [
   {
     to: "/scholarships",
     title: "Scholarships",
-    description: "Browse funding opportunities from DAAD and other scraped sources. View details and official links.",
+    description: "Browse sample scholarships stored in JSON. View details and explore funding opportunities.",
     icon: "★",
   },
   {
