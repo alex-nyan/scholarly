@@ -20,12 +20,6 @@ const FEATURES = [
     icon: "◆",
   },
   {
-    to: "/community",
-    title: "Community",
-    description: "Ask questions and help others. A student forum for academics, pathways, and opportunities.",
-    icon: "○",
-  },
-  {
     to: "/submit",
     title: "Submit",
     description: "Are you an organization? Submit an opportunity and we’ll review and publish it.",
@@ -42,8 +36,8 @@ export default function HomePage() {
           Your path to <span className="home-title-accent">opportunity</span>
         </h1>
         <p className="home-subtitle">
-          Discover volunteering roles, explore academic pathways, and connect
-          with a community that supports your next step.
+          Discover volunteering roles, explore academic pathways, and find
+          opportunities that support your next step.
         </p>
         <div className="home-cta">
           <Link to="/opportunities" className="btn btn-hero-primary">
@@ -77,8 +71,8 @@ export default function HomePage() {
 
       <section className="home-footer-cta">
         <p className="home-footer-text">
-          Have a question? Join the <Link to="/community">Community</Link> and
-          ask—or help someone else.
+          Explore <Link to="/opportunities">opportunities</Link> and{" "}
+          <Link to="/scholarships">scholarships</Link> to get started.
         </p>
       </section>
     </div>
