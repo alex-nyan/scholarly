@@ -6,8 +6,6 @@ import OpportunitiesPage from "./pages/OpportunitiesPage";
 import PathFinderQuiz from "./pages/PathFinderQuiz";
 import SubmitOpportunityPage from "./pages/SubmitOpportunityPage";
 import AdminPage from "./pages/AdminPage";
-import CommunityPage from "./pages/CommunityPage";
-import CommunityPostPage from "./pages/CommunityPostPage";
 import ScholarshipsPage from "./pages/ScholarshipsPage";
 import ScholarshipDetailPage from "./pages/ScholarshipDetailPage";
 import LoginPage from "./pages/LoginPage";
@@ -90,8 +88,6 @@ export default function App() {
             <Route path="/scholarships" element={<ScholarshipsPage />} />
             <Route path="/scholarships/:id" element={<ScholarshipDetailPage />} />
             <Route path="/pathfinder" element={<PathFinderQuiz />} />
-            <Route path="/community" element={<CommunityPage />} />
-            <Route path="/community/:id" element={<CommunityPostPage />} />
             <Route path="/submit" element={<SubmitOpportunityPage />} />
             <Route path="/admin" element={<AdminRoute />} />
           </Routes>
