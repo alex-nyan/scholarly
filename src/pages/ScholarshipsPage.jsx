@@ -9,21 +9,24 @@ function normalizeScholarships(payload) {
   return payload.results.map((item, index) => ({
     ...item,
     id: index,
+    tags: Array.isArray(item.tags) ? item.tags : [],
   }));
 }
 
-// Score scholarship for personalization (education_level match; optional age from text)
+// Score scholarship for personalization: education_level, age, and tag overlap with profile
 function scoreForProfile(scholarship, profile) {
   if (!profile) return 0;
   let score = 0;
   const userLevel = (profile.education_level || "").toLowerCase();
   const schLevel = (scholarship.education_level || "").toLowerCase();
   const text = `${scholarship.message || ""} ${scholarship.eligibility || ""}`.toLowerCase();
+  const schTags = (scholarship.tags || []).map((t) => String(t).toLowerCase());
+  const profileTags = (profile.tags || []).map((t) => String(t).toLowerCase());
 
   if (userLevel && schLevel) {
     if (schLevel === "any" || schLevel === "any education") score += 1;
     else {
-      const schLevels = schLevel.split(",").map((s) => s.trim());
+      const schLevels = schLevel.split(",").map((s) => s.trim().toLowerCase());
       if (schLevels.some((l) => l.includes(userLevel) || userLevel.includes(l))) score += 2;
     }
   }
@@ -33,17 +36,29 @@ function scoreForProfile(scholarship, profile) {
     if (text.includes("undergraduate") && profile.age >= 17 && profile.age <= 25) score += 1;
     if (text.includes("graduate") && profile.age >= 22) score += 1;
   }
+
+  const tagOverlap = profileTags.filter((pt) => schTags.includes(pt)).length;
+  score += tagOverlap * 2;
   return score;
 }
 
 function ScholarshipCard({ item }) {
+  const tags = item.tags || [];
   return (
     <Link to={`/scholarships/${item.id}`} className="scholarship-card">
       <div className="scholarship-card-header">
         <span className="scholarship-card-source">{item.source}</span>
-        {item.education_level && (
-          <span className="scholarship-card-tag">{item.education_level}</span>
-        )}
+        <div className="scholarship-card-tags">
+          {tags.length > 0
+            ? tags.map((t) => (
+                <span key={t} className="scholarship-card-tag">
+                  {t}
+                </span>
+              ))
+            : item.education_level && (
+                <span className="scholarship-card-tag">{item.education_level}</span>
+              )}
+        </div>
       </div>
       <h2 className="scholarship-card-title">{item.message || "Untitled"}</h2>
       {(item.deadline || item.amount) && (
@@ -97,7 +112,13 @@ export default function ScholarshipsPage() {
     return Array.from(set).sort();
   }, [list]);
 
+  const allTags = useMemo(() => {
+    const set = new Set(list.flatMap((s) => s.tags || []).filter(Boolean));
+    return Array.from(set).sort();
+  }, [list]);
+
   const [educationFilter, setEducationFilter] = useState("");
+  const [tagFilter, setTagFilter] = useState("");
 
   const filtered = useMemo(() => {
     let out = list;
@@ -108,7 +129,8 @@ export default function ScholarshipsPage() {
           (s.message || "").toLowerCase().includes(needle) ||
           (s.source || "").toLowerCase().includes(needle) ||
           (s.education_level || "").toLowerCase().includes(needle) ||
-          (s.eligibility || "").toLowerCase().includes(needle)
+          (s.eligibility || "").toLowerCase().includes(needle) ||
+          (s.tags || []).some((t) => String(t).toLowerCase().includes(needle))
       );
     }
     if (sourceFilter) {
@@ -117,8 +139,15 @@ export default function ScholarshipsPage() {
     if (educationFilter) {
       out = out.filter((s) => s.education_level === educationFilter);
     }
+    if (tagFilter) {
+      out = out.filter((s) => (s.tags || []).includes(tagFilter));
+    }
+    if (user && profile && (profile.tags?.length > 0 || profile.education_level)) {
+      const withScores = out.map((s) => ({ ...s, _score: scoreForProfile(s, profile) }));
+      out = withScores.sort((a, b) => (b._score ?? 0) - (a._score ?? 0));
+    }
     return out;
-  }, [list, query, sourceFilter, educationFilter]);
+  }, [list, query, sourceFilter, educationFilter, tagFilter, user, profile]);
 
   const recommended = useMemo(() => {
     if (!user || !profile) return [];
@@ -127,15 +156,16 @@ export default function ScholarshipsPage() {
   }, [list, user, profile]);
 
   const showRecommended = user && recommended.length > 0;
+  const profileTags = profile?.tags || [];
 
   return (
     <div className="page scholarships-page">
       <header className="hero scholarships-hero">
         <div>
-          <p className="eyebrow">Scholarship database</p>
+          <p className="eyebrow">Scholarship finder</p>
           <h1>Scholarships</h1>
           <p className="subtitle">
-            Browse sample scholarships stored in JSON. Click a card to view details and explore the project.
+            UK A-level and undergraduate, Canada, and Singapore (NUS & NTU ASEAN) scholarships. Search and filter by tag; recommendations match your profile and interests.
           </p>
         </div>
         <div className="scholarships-controls">
@@ -143,10 +173,34 @@ export default function ScholarshipsPage() {
             <label htmlFor="scholarship-search">Search</label>
             <input
               id="scholarship-search"
-              placeholder="Title, provider..."
+              placeholder="Title, provider, or tag..."
               value={query}
               onChange={(e) => setQuery(e.target.value)}
             />
+          </div>
+          <div className="search">
+            <label htmlFor="scholarship-tag">Tag</label>
+            <select
+              id="scholarship-tag"
+              value={tagFilter}
+              onChange={(e) => setTagFilter(e.target.value)}
+            >
+              <option value="">All tags</option>
+              {profileTags.length > 0 && (
+                <optgroup label="Your interests">
+                  {profileTags.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </optgroup>
+              )}
+              {allTags.length > 0 && (
+                <optgroup label="All tags">
+                  {allTags.map((t) => (
+                    <option key={t} value={t}>{t}</option>
+                  ))}
+                </optgroup>
+              )}
+            </select>
           </div>
           <div className="search">
             <label htmlFor="scholarship-source">Provider</label>
@@ -177,10 +231,10 @@ export default function ScholarshipsPage() {
         </div>
       </header>
 
-      {user && !profile?.education_level && (
+      {user && !profile?.education_level && !profile?.tags?.length && (
         <section className="recommended-cta">
           <Link to="/profile" className="btn btn-secondary">
-            Set your profile (age & education) to see personalized recommendations →
+            Set your profile (age, education & interests) to see personalized recommendations →
           </Link>
         </section>
       )}
@@ -189,7 +243,7 @@ export default function ScholarshipsPage() {
         <section className="recommended-section">
           <h2 className="recommended-title">Recommended for you</h2>
           <p className="recommended-subtitle">
-            Based on your profile (age, education level).
+            Based on your profile (education level, interests, and age).
           </p>
           <div className="scholarships-grid recommended-grid">
             {recommended.slice(0, 12).map((item) => (

@@ -40,11 +40,7 @@ function Nav() {
       </Link>
       <div className="nav-links">
         <NavLink to="/" end>Home</NavLink>
-        <NavLink to="/opportunities">Opportunities</NavLink>
         <NavLink to="/scholarships">Scholarships</NavLink>
-        <NavLink to="/pathfinder">Path Finder</NavLink>
-        <NavLink to="/community">Community</NavLink>
-        <NavLink to="/submit">Submit</NavLink>
         {isAdmin && <NavLink to="/admin">Admin</NavLink>}
         {!loading && (
           user ? (

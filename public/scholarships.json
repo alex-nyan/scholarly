@@ -1,95 +1,105 @@
 {
-  "description": "Scholarly showcase — 10 sample scholarships for demo",
+  "description": "Curated scholarships for international students: UK A-level and undergraduate, Canada (e.g. Study in Canada, Lester B. Pearson, UBC), and Singapore (NUS & NTU ASEAN). Filter by tag and get recommendations based on your profile.",
   "results": [
     {
-      "message": "STEM Excellence Scholarship",
-      "source": "National Science Foundation",
-      "permalink_url": "https://example.com/stem-excellence",
+      "message": "SOAS Undergraduate International Academic Excellence Scholarship",
+      "source": "SOAS University of London",
+      "permalink_url": "https://www.soas.ac.uk/study/student-life/finance/scholarships/undergraduate-international-academic-excellence-scholarship",
       "education_level": "Undergraduate",
-      "amount": "$5,000",
-      "deadline": "March 15, 2026",
-      "eligibility": "U.S. citizens pursuing a STEM major with 3.0+ GPA."
+      "amount": "£5,000",
+      "deadline": "31 May (check year on site)",
+      "eligibility": "Overseas fee-paying students. AAB or equivalent at A-Level (or equivalent). Full-time undergraduate.",
+      "tags": ["Undergraduate", "Merit", "International"]
     },
     {
-      "message": "First-Generation College Student Fund",
-      "source": "Scholarly Foundation",
-      "permalink_url": "https://example.com/first-gen",
+      "message": "Northumbria University International Scholarship",
+      "source": "Northumbria University",
+      "permalink_url": "https://www.northumbria.ac.uk/study/international/fees-and-scholarships/",
       "education_level": "Undergraduate",
-      "amount": "$3,000",
-      "deadline": "April 1, 2026",
-      "eligibility": "First in family to attend a four-year college. Any major."
+      "amount": "£3,000 first year; £2,000 subsequent years (up to £7,000 total)",
+      "deadline": "September intake — check site",
+      "eligibility": "Self-funded international students from specified countries. Enrolling full-time undergraduate.",
+      "tags": ["Undergraduate", "International"]
     },
     {
-      "message": "Graduate Research Fellowship",
-      "source": "Council of Graduate Schools",
-      "permalink_url": "https://example.com/graduate-research",
-      "education_level": "Graduate",
-      "amount": "$10,000",
-      "deadline": "May 10, 2026",
-      "eligibility": "Enrolled in a research-based master's or PhD program."
-    },
-    {
-      "message": "Community Service Leadership Award",
-      "source": "Civic Engagement Fund",
-      "permalink_url": "https://example.com/community-service",
-      "education_level": "High School, Undergraduate",
-      "amount": "$2,500",
-      "deadline": "March 31, 2026",
-      "eligibility": "Demonstrated volunteer or community leadership. Essay required."
-    },
-    {
-      "message": "Women in Engineering Scholarship",
-      "source": "Society of Women Engineers",
-      "permalink_url": "https://example.com/wie-scholarship",
+      "message": "Study in Canada Scholarships",
+      "source": "Global Affairs Canada (EduCanada)",
+      "permalink_url": "https://www.educanada.ca/scholarships-bourses/can/institutions/study-in-canada-sep-etudes-au-canada-pct.aspx",
       "education_level": "Undergraduate",
-      "amount": "$4,000",
-      "deadline": "April 15, 2026",
-      "eligibility": "Female-identifying students in an accredited engineering program."
+      "amount": "CAD $10,200",
+      "deadline": "March (institution application — check EduCanada)",
+      "eligibility": "Citizens of eligible countries in Asia, Europe, Middle East, Africa. Enrolled full-time at post-secondary in eligible country. Short-term exchange (4 months / one term). Canadian institution applies on your behalf.",
+      "tags": ["Undergraduate", "International", "Canada"]
     },
     {
-      "message": "No-Essay Quick Apply Grant",
-      "source": "FastFund Education",
-      "permalink_url": "https://example.com/no-essay",
-      "education_level": "Any",
-      "amount": "$1,000",
-      "deadline": "Rolling — apply by June 30, 2026",
-      "eligibility": "Open to all students. No essay; short application only."
-    },
-    {
-      "message": "Nursing Student Support Grant",
-      "source": "Healthcare Futures Initiative",
-      "permalink_url": "https://example.com/nursing-grant",
-      "education_level": "Undergraduate, Graduate",
-      "amount": "$3,500",
-      "deadline": "May 1, 2026",
-      "eligibility": "Enrolled in an accredited nursing program (BSN, MSN, or similar)."
-    },
-    {
-      "message": "Creative Arts & Design Award",
-      "source": "Arts Education Council",
-      "permalink_url": "https://example.com/creative-arts",
+      "message": "Lester B. Pearson International Scholarships",
+      "source": "University of Toronto",
+      "permalink_url": "https://future.utoronto.ca/finances/awards/international-students/",
       "education_level": "Undergraduate",
-      "amount": "$2,000",
-      "deadline": "April 20, 2026",
-      "eligibility": "Major in visual arts, design, music, or performing arts. Portfolio required."
+      "amount": "Tuition, books, incidental fees, full residence support for four years",
+      "deadline": "School nomination Oct; U of T application Oct; Pearson form Nov (check site for year)",
+      "eligibility": "International students (study permit). Final year of secondary school or graduated no later than June prior year. Beginning undergrad at U of T. School must nominate (one per school per year).",
+      "tags": ["Undergraduate", "Merit", "International", "Canada"]
     },
     {
-      "message": "Merit-Based Academic Excellence",
-      "source": "Academic Honors Society",
-      "permalink_url": "https://example.com/merit-excellence",
+      "message": "NUS ASEAN Undergraduate Scholarship",
+      "source": "National University of Singapore (NUS)",
+      "permalink_url": "https://nus.edu.sg/oam/scholarships/scholarships-for-freshmen-(international-students)/asean-undergraduate-scholarship",
       "education_level": "Undergraduate",
-      "amount": "$5,000",
-      "deadline": "March 25, 2026",
-      "eligibility": "3.5+ GPA, full-time enrollment. Two letters of recommendation."
+      "amount": "Full tuition (after MOE grant), S$5,800 living allowance, S$3,000 accommodation, S$1,750 one-time computer allowance",
+      "deadline": "Apply via NUS undergraduate admission; outcomes by mid-July",
+      "eligibility": "Citizens of ASEAN member countries (excluding Singapore). Outstanding high school results. Good co-curricular and leadership. Full-time undergraduate at NUS. Not transfer applicants.",
+      "tags": ["Undergraduate", "International", "Singapore", "ASEAN"]
     },
     {
-      "message": "International Student Opportunity Fund",
-      "source": "Global Education Alliance",
-      "permalink_url": "https://example.com/international-fund",
-      "education_level": "Undergraduate, Graduate",
-      "amount": "$4,500",
-      "deadline": "May 5, 2026",
-      "eligibility": "F-1 or J-1 visa holders at a U.S. institution. Any field of study."
+      "message": "NTU ASEAN Undergraduate Scholarship",
+      "source": "Nanyang Technological University (NTU Singapore)",
+      "permalink_url": "https://www.ntu.edu.sg/admissions/undergraduate/scholarships/scholarship/asean-scholarship",
+      "education_level": "Undergraduate",
+      "amount": "Full subsidised tuition, S$5,800 living allowance, S$3,000 accommodation, S$1,750 one-time computer allowance",
+      "deadline": "With NTU undergraduate application — check NTU admissions",
+      "eligibility": "Citizens of ASEAN countries (except Singapore). Strong A-level / IB / polytechnic / Year 12 equivalent. Full-time undergraduate at NTU. Leadership and co-curricular record. Minimum CGPA 3.5/5.0 to retain.",
+      "tags": ["Undergraduate", "International", "Singapore", "ASEAN"]
+    },
+    {
+      "message": "Imperial College London International Baccalaureate Excellence Scholarships",
+      "source": "Imperial College London",
+      "permalink_url": "https://www.imperial.ac.uk/study/fees-and-funding/scholarships-search/",
+      "education_level": "Undergraduate",
+      "amount": "£5,000 per year for duration of studies",
+      "deadline": "April (check year); automatic consideration via application",
+      "eligibility": "International students studying IB diploma. Engineering, natural sciences, or business. Automatic nomination based on academic excellence; no separate form.",
+      "tags": ["Undergraduate", "STEM", "Merit", "International"]
+    },
+    {
+      "message": "British Council Study UK scholarships and funding",
+      "source": "British Council",
+      "permalink_url": "https://study-uk.britishcouncil.org/scholarships-funding",
+      "education_level": "High School, Undergraduate, Graduate",
+      "amount": "Varies by programme (e.g. GREAT £10,000 for postgraduate)",
+      "deadline": "Varies by scholarship",
+      "eligibility": "International students. British Council lists UK scholarships and bursaries; filter by level and country. Includes university-specific and GREAT programmes for eligible countries.",
+      "tags": ["High School", "Undergraduate", "Graduate", "International"]
+    },
+    {
+      "message": "UBC International Leader of Tomorrow Award",
+      "source": "University of British Columbia",
+      "permalink_url": "https://you.ubc.ca/financial-planning/scholarships-awards-international/",
+      "education_level": "Undergraduate",
+      "amount": "Need- and merit-based; can cover full tuition and living costs",
+      "deadline": "December (check UBC for exact date)",
+      "eligibility": "International students applying to UBC from outside Canada. Academic achievement, leadership, engagement. Must demonstrate financial need.",
+      "tags": ["Undergraduate", "International", "Canada", "Merit"]
+    },
+    {
+      "message": "Singapore Government Scholarships (e.g. ASEAN, MERIT)",
+      "source": "Singapore Ministry of Education / Universities",
+      "permalink_url": "https://www.moe.gov.sg/financial-matters/awards-scholarships",
+      "education_level": "Undergraduate",
+      "amount": "Varies (tuition support, allowances; often with bond)",
+      "deadline": "Usually with university application cycle",
+      "eligibility": "Criteria vary by scheme (e.g. ASEAN, merit-based). Often for citizens of ASEAN or selected countries. Apply via participating Singapore universities (NUS, NTU, SMU, etc.).",
+      "tags": ["Undergraduate", "International", "Singapore", "ASEAN"]
     }
   ]
 }

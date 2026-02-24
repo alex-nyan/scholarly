@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { SCHOLARSHIP_TAG_OPTIONS } from "../data/scholarshipTags";
 
 const EDUCATION_OPTIONS = [
   "",
@@ -18,6 +19,7 @@ export default function ProfilePage() {
   const [age, setAge] = useState("");
   const [educationLevel, setEducationLevel] = useState("");
   const [country, setCountry] = useState("");
+  const [tags, setTags] = useState([]);
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
@@ -31,8 +33,15 @@ export default function ProfilePage() {
       setAge(profile.age != null ? String(profile.age) : "");
       setEducationLevel(profile.education_level ?? "");
       setCountry(profile.country ?? "");
+      setTags(Array.isArray(profile.tags) ? profile.tags : []);
     }
   }, [user, profile, authLoading, navigate]);
+
+  function toggleTag(tag) {
+    setTags((prev) =>
+      prev.includes(tag) ? prev.filter((t) => t !== tag) : [...prev, tag]
+    );
+  }
 
   async function handleSubmit(e) {
     e.preventDefault();
@@ -44,6 +53,7 @@ export default function ProfilePage() {
         age: age === "" ? undefined : parseInt(age, 10),
         education_level: educationLevel || undefined,
         country: country.trim() || undefined,
+        tags: tags.length ? tags : undefined,
       });
       setMessage("Profile saved. Your scholarship recommendations will update.");
     } catch (err) {
@@ -61,7 +71,7 @@ export default function ProfilePage() {
         <h1>Your profile</h1>
         <p className="profile-email">{user.email}</p>
         <p className="profile-hint">
-          Set your age and education level so we can recommend the best scholarships for you.
+          Set your age, education level, and interests so we can recommend the best scholarships for you.
         </p>
         {message && <p className={message.startsWith("Profile") ? "profile-success" : "auth-error"}>{message}</p>}
         <form onSubmit={handleSubmit} className="auth-form profile-form">
@@ -103,6 +113,22 @@ export default function ProfilePage() {
             onChange={(e) => setCountry(e.target.value)}
             placeholder="e.g. Myanmar"
           />
+          <div className="profile-tags-wrap">
+            <label>Interests (match scholarship tags)</label>
+            <p className="profile-tags-hint">Select tags that match your goals. Scholarships are filtered and recommended by these.</p>
+            <div className="profile-tags">
+              {SCHOLARSHIP_TAG_OPTIONS.map((tag) => (
+                <label key={tag} className="profile-tag-chip">
+                  <input
+                    type="checkbox"
+                    checked={tags.includes(tag)}
+                    onChange={() => toggleTag(tag)}
+                  />
+                  <span>{tag}</span>
+                </label>
+              ))}
+            </div>
+          </div>
           <button type="submit" className="btn btn-primary" disabled={saving}>
             {saving ? "Saving…" : "Save profile"}
           </button>
