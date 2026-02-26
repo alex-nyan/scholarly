@@ -1,13 +1,27 @@
 import { useEffect, useMemo, useState } from "react";
 import { getAcceptedSubmissions } from "../data/submissionsStore";
+import { MOCK_SCHOLARSHIPS } from "../data/mockScholarships";
 
-const DEFAULT_URL = "/opportunities.json";
+function scholarshipToOpportunity(scholarship) {
+  const amountLabel =
+    scholarship.amount === 0 ? "Full coverage" : `Up to $${scholarship.amount.toLocaleString()}`;
+  const message = [
+    scholarship.name,
+    scholarship.description,
+    `Funding: ${amountLabel} (${scholarship.fundingType})`,
+  ]
+    .filter(Boolean)
+    .join("\n\n");
 
-function normalizeOpportunities(payload) {
-  if (!payload || !Array.isArray(payload.results)) {
-    return [];
-  }
-  return payload.results;
+  return {
+    id: scholarship.id,
+    message,
+    source: scholarship.location || "Scholarship",
+    permalink_url: scholarship.url || null,
+    created_time: null,
+    submitted: false,
+    category: "Scholarship",
+  };
 }
 
 /** Map accepted submission to same shape as feed item for display. */
@@ -25,39 +39,8 @@ function submissionToOpportunity(sub) {
 }
 
 export default function OpportunitiesPage() {
-  const [feedOpportunities, setFeedOpportunities] = useState([]);
   const [acceptedSubmissions, setAcceptedSubmissions] = useState([]);
   const [query, setQuery] = useState("");
-  const [status, setStatus] = useState({
-    loading: true,
-    error: "",
-    source: DEFAULT_URL,
-  });
-
-  useEffect(() => {
-    let isMounted = true;
-    setStatus((s) => ({ ...s, loading: true, error: "" }));
-    fetch(DEFAULT_URL)
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error(`Failed to load ${DEFAULT_URL}`);
-        }
-        return response.json();
-      })
-      .then((payload) => {
-        if (!isMounted) return;
-        setFeedOpportunities(normalizeOpportunities(payload));
-        setStatus({ loading: false, error: "", source: DEFAULT_URL });
-      })
-      .catch((error) => {
-        if (!isMounted) return;
-        setFeedOpportunities([]);
-        setStatus({ loading: false, error: error.message, source: DEFAULT_URL });
-      });
-    return () => {
-      isMounted = false;
-    };
-  }, []);
 
   useEffect(() => {
     setAcceptedSubmissions(getAcceptedSubmissions());
@@ -66,11 +49,16 @@ export default function OpportunitiesPage() {
     return () => window.removeEventListener("storage", onStorage);
   }, []);
 
+  const feedOpportunities = useMemo(
+    () => (Array.isArray(MOCK_SCHOLARSHIPS) ? MOCK_SCHOLARSHIPS.map(scholarshipToOpportunity) : []),
+    []
+  );
+
   const opportunities = useMemo(() => {
-    const fromFeed = feedOpportunities.map((item) => ({ ...item, submitted: false }));
+    const fromFeed = feedOpportunities;
     const fromSubmissions = acceptedSubmissions.map(submissionToOpportunity);
     return [...fromSubmissions, ...fromFeed];
-  }, [feedOpportunities, acceptedSubmissions]);
+  }, [acceptedSubmissions, feedOpportunities]);
 
   const filtered = useMemo(() => {
     const needle = query.trim().toLowerCase();
@@ -91,11 +79,11 @@ export default function OpportunitiesPage() {
     <div className="page">
       <header className="hero">
         <div>
-          <p className="eyebrow">Youth volunteering feed</p>
+          <p className="eyebrow">Youth opportunities</p>
           <h1>Myanmar Opportunities</h1>
           <p className="subtitle">
-            Showing public Facebook Page posts. Update{" "}
-            <code>public/opportunities.json</code> after running the fetcher.
+            Showing demo opportunities sourced from the Path Finder scholarship dataset
+            and community submissions.
           </p>
         </div>
         <div className="search">
@@ -110,13 +98,7 @@ export default function OpportunitiesPage() {
       </header>
 
       <section className="status">
-        {status.loading && <span>Loading data...</span>}
-        {!status.loading && status.error && (
-          <span className="error">{status.error}</span>
-        )}
-        {!status.loading && !status.error && (
-          <span>{filtered.length} opportunities</span>
-        )}
+        <span>{filtered.length} opportunities</span>
       </section>
 
       <section className="grid">
@@ -151,7 +133,7 @@ export default function OpportunitiesPage() {
             )}
           </article>
         ))}
-        {!status.loading && !status.error && filtered.length === 0 && (
+        {filtered.length === 0 && (
           <div className="empty">
             No opportunities match your filter.
           </div>

@@ -1,6 +1,40 @@
-### npm build ###
-**/node_modules
+# Dependencies
+node_modules/
 
-### scripts ###
+# Build output
+dist/
+
+# Python (if reintroduced)
+.venv/
+__pycache__/
+*.py[cod]
+*.pyo
+.Python
+*.so
+*.egg
+*.egg-info/
+.eggs/
+
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor / IDE
+*.swp
+*.swo
+*~
+.idea/
+.vscode/
+*.sublime-*
+
+# Local / generated (optional)
 scripts/
 public/
+*.log
+coverage/
+.cache/
