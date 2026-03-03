@@ -10,7 +10,7 @@ const FEATURES = [
   {
     to: "/pathfinder",
     title: "Path Finder",
-    description: "Answer 20 short questions and get a personalized suggestion: GED, OSSD, IGCSE, A-Levels, or Myanmar Matriculation.",
+    description: "Answer 21 short questions and get a personalized suggestion: GED, OSSD, IGCSE, A-Levels, or Myanmar Matriculation.",
     icon: "◆",
   },
   {
@@ -22,7 +22,7 @@ const FEATURES = [
   {
     to: "/submit",
     title: "Submit",
-    description: "Are you an organization? Submit an opportunity and we’ll review and publish it.",
+    description: "Are you an organization? Submit an opportunity and we'll review and publish it.",
     icon: "▸",
   },
 ];

@@ -22,7 +22,6 @@ export default function App() {
           <NavLink to="/pathfinder">Path Finder</NavLink>
           <NavLink to="/community">Community</NavLink>
           <NavLink to="/submit">Submit</NavLink>
-          <NavLink to="/admin">Admin</NavLink>
         </div>
       </nav>
       <main>

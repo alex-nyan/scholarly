@@ -259,10 +259,10 @@ export const QUIZ_QUESTIONS = [
  * @param {Array<{label: string, scores: Object}|null>} answers
  * @returns {{ ranked: Array<{pathway:string, score:number, counselingNote:string}>, flag: string|null }}
  */
-export function computeScores(answers) {
+export function computeScores(answers, ageQuestionIndex = 20) {
   // 1. Read gatekeeper signals
   const gradeAnswer = answers[0];
-  const ageAnswer = answers[20];
+  const ageAnswer = answers[ageQuestionIndex];
 
   const isGrade8OrBelow = gradeAnswer?.label === "Grade 8 or below";
   const isUnder16 = ageAnswer?.label === "Under 16";

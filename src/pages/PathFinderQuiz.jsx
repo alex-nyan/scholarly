@@ -19,13 +19,33 @@ const FUNDING_LABELS = {
   stipend: "Monthly stipend",
 };
 
+const INTERNATIONAL_PATHWAYS = new Set(["alevel", "igcse", "ossd"]);
+
+// Qualitative match label — avoids exposing raw additive scores to users
+const MAX_POSSIBLE_SCORE = 54; // approximate ceiling across all 21 questions
+function matchLabel(score) {
+  const pct = score / MAX_POSSIBLE_SCORE;
+  if (pct >= 0.45) return { label: "Strong Match", cls: "match--strong" };
+  if (pct >= 0.25) return { label: "Good Match", cls: "match--good" };
+  return { label: "Possible Match", cls: "match--possible" };
+}
+
+// Resolve gatekeeper question indices by id — safe against question reordering
+const AGE_QUESTION_INDEX = QUIZ_QUESTIONS.findIndex((q) => q.id === 21);
+if (AGE_QUESTION_INDEX === -1) {
+  console.error("PathFinderQuiz: age gate question (id=21) not found in QUIZ_QUESTIONS");
+}
+
 function buildScholarshipTags(ranked, flag) {
   const tags = [];
   ranked.slice(0, 2).forEach((r) => { if (r.score > 0) tags.push(r.pathway); });
   if (ranked.some((r) => r.pathway === "alevel" && r.score > 0)) tags.push("grade11+");
   if (ranked.some((r) => r.pathway === "igcse" && r.score > 0)) tags.push("grade9+");
   if (flag === null && ranked[0]?.score > 0) tags.push("standard");
-  tags.push("international");
+  // Only tag as international if at least one international pathway scored
+  if (ranked.some((r) => INTERNATIONAL_PATHWAYS.has(r.pathway) && r.score > 0)) {
+    tags.push("international");
+  }
   return tags;
 }
 
@@ -100,12 +120,13 @@ export default function PathFinderQuiz() {
   const [showResult, setShowResult] = useState(false);
 
   const question = QUIZ_QUESTIONS[currentIndex];
-  const progress = ((currentIndex + 1) / TOTAL_QUESTIONS) * 100;
+  const progress = (currentIndex / TOTAL_QUESTIONS) * 100;
   const isLast = currentIndex === TOTAL_QUESTIONS - 1;
 
   const handleSelect = (option) => {
-    const newAnswers = [...answers];
-    newAnswers[currentIndex] = option;
+    // Slice off any stale answers beyond current position before writing,
+    // so back-navigation + re-selection never leaves orphaned later answers.
+    const newAnswers = [...answers.slice(0, currentIndex), option];
     setAnswers(newAnswers);
     if (isLast) {
       setShowResult(true);
@@ -125,7 +146,7 @@ export default function PathFinderQuiz() {
   };
 
   if (showResult) {
-    const { ranked, flag } = computeScores(answers);
+    const { ranked, flag } = computeScores(answers, AGE_QUESTION_INDEX);
     const isFoundation = flag === "FOUNDATION_REQUIRED";
 
     let scenarioKey = "standard";
@@ -164,17 +185,20 @@ export default function PathFinderQuiz() {
             <>
               {top.length > 0 ? (
                 <ul className="results-list">
-                  {top.map(({ pathway, score, counselingNote }, rank) => (
-                    <li key={pathway} className="result-card">
-                      <span className="result-rank">#{rank + 1}</span>
-                      <h2>{PATHWAY_LABELS[pathway]}</h2>
-                      {counselingNote && (
-                        <p className="result-counseling-note">{counselingNote}</p>
-                      )}
-                      <p className="result-desc">{PATHWAY_DESCRIPTIONS[pathway]}</p>
-                      <p className="result-score">Match score: {score}</p>
-                    </li>
-                  ))}
+                  {top.map(({ pathway, score, counselingNote }, rank) => {
+                    const match = matchLabel(score);
+                    return (
+                      <li key={pathway} className="result-card">
+                        <span className="result-rank">#{rank + 1}</span>
+                        <h2>{PATHWAY_LABELS[pathway]}</h2>
+                        {counselingNote && (
+                          <p className="result-counseling-note">{counselingNote}</p>
+                        )}
+                        <p className="result-desc">{PATHWAY_DESCRIPTIONS[pathway]}</p>
+                        <span className={`result-match-label ${match.cls}`}>{match.label}</span>
+                      </li>
+                    );
+                  })}
                 </ul>
               ) : (
                 <p className="result-empty">

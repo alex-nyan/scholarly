@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { getPosts, addPost, getReplyCount } from "../data/communityStore";
+import { getPosts, addPost, getReplyCount, votePost } from "../data/communityStore";
 
 export default function CommunityPage() {
   const [posts, setPosts] = useState([]);
   const [showForm, setShowForm] = useState(false);
   const [form, setForm] = useState({ title: "", body: "", author: "" });
   const [error, setError] = useState("");
+  // Track which post ids have been upvoted this session
+  const [votedPosts, setVotedPosts] = useState(() => new Set());
 
   const refresh = () => setPosts(getPosts());
 
@@ -27,13 +29,19 @@ export default function CommunityPage() {
       setError("Please enter a title for your question.");
       return;
     }
-    addPost({
-      title,
-      body: form.body.trim(),
-      author: form.author.trim(),
-    });
+    addPost({ title, body: form.body.trim(), author: form.author.trim() });
     setForm({ title: "", body: "", author: "" });
     setShowForm(false);
+    refresh();
+  };
+
+  const handleVote = (e, postId) => {
+    // Prevent the Link from navigating when the vote button is clicked
+    e.preventDefault();
+    e.stopPropagation();
+    if (votedPosts.has(postId)) return;
+    votePost(postId);
+    setVotedPosts((prev) => new Set([...prev, postId]));
     refresh();
   };
 
@@ -41,7 +49,7 @@ export default function CommunityPage() {
     <div className="page community-page">
       <header className="community-hero">
         <p className="eyebrow">Community</p>
-        <h1>Q&A Forum</h1>
+        <h1>Q&amp;A Forum</h1>
         <p className="subtitle">
           Ask questions and help other students by answering. Topics can be
           academics, pathways, volunteering, or anything related to youth
@@ -61,7 +69,7 @@ export default function CommunityPage() {
 
       {showForm && (
         <form className="community-form card" onSubmit={handleSubmit}>
-          {error && <p className="form-error">{error}</p>}
+          {error && <p className="form-error" role="alert">{error}</p>}
           <div className="form-group">
             <label htmlFor="q-title">Question title *</label>
             <input
@@ -101,33 +109,52 @@ export default function CommunityPage() {
       <section className="community-list">
         <h2 className="community-list-title">Recent questions</h2>
         {posts.length === 0 ? (
-          <div className="empty">
-            No questions yet. Be the first to ask!
-          </div>
+          <div className="empty">No questions yet. Be the first to ask!</div>
         ) : (
           <ul className="post-list">
-            {posts.map((post) => (
-              <li key={post.id}>
-                <Link to={`/community/${post.id}`} className="post-card card">
-                  <h3 className="post-card-title">{post.title}</h3>
-                  {post.body && (
-                    <p className="post-card-preview">
-                      {post.body.slice(0, 120)}
-                      {post.body.length > 120 ? "…" : ""}
-                    </p>
-                  )}
-                  <div className="post-card-meta">
-                    <span className="post-card-author">{post.author}</span>
-                    <span className="post-card-date">
-                      {new Date(post.createdAt).toLocaleDateString()}
-                    </span>
-                    <span className="post-card-count">
-                      {getReplyCount(post.id)} answer{getReplyCount(post.id) !== 1 ? "s" : ""}
-                    </span>
-                  </div>
-                </Link>
-              </li>
-            ))}
+            {posts.map((post) => {
+              const replyCount = getReplyCount(post.id);
+              const hasVoted = votedPosts.has(post.id);
+              return (
+                <li key={post.id}>
+                  <Link to={`/community/${post.id}`} className="post-card card">
+                    <div className="post-card-main">
+                      <h3 className="post-card-title">{post.title}</h3>
+                      {post.body && (
+                        <p className="post-card-preview">
+                          {post.body.slice(0, 120)}
+                          {post.body.length > 120 ? "…" : ""}
+                        </p>
+                      )}
+                      <div className="post-card-meta">
+                        <span className="post-card-author">{post.author}</span>
+                        <span className="post-card-date">
+                          {new Date(post.createdAt).toLocaleDateString()}
+                        </span>
+                        <span className="post-card-count">
+                          {replyCount} {replyCount === 1 ? "answer" : "answers"}
+                        </span>
+                        {post.acceptedReplyId && (
+                          <span className="post-card-accepted">✓ Answered</span>
+                        )}
+                      </div>
+                    </div>
+                    <div className="post-card-vote">
+                      <button
+                        type="button"
+                        className={`vote-btn ${hasVoted ? "vote-btn--voted" : ""}`}
+                        onClick={(e) => handleVote(e, post.id)}
+                        aria-label={hasVoted ? "Already upvoted" : "Upvote this question"}
+                        disabled={hasVoted}
+                      >
+                        ▲
+                      </button>
+                      <span className="vote-count">{post.votes || 0}</span>
+                    </div>
+                  </Link>
+                </li>
+              );
+            })}
           </ul>
         )}
       </section>

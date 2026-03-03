@@ -1206,3 +1206,455 @@ h1 {
   color: #1e3ad4;
   text-decoration: underline;
 }
+
+/* =============================================================================
+   MATCH LABEL — PathFinderQuiz result cards (replaces raw score)
+   ============================================================================= */
+
+.result-match-label {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 4px 10px;
+  border-radius: 6px;
+  margin-top: 4px;
+}
+
+.match--strong {
+  background: #e0f5e9;
+  color: #0d6b2c;
+}
+
+.match--good {
+  background: #e8ecff;
+  color: #2a4dff;
+}
+
+.match--possible {
+  background: #f4f4f8;
+  color: #555;
+}
+
+/* =============================================================================
+   OPPORTUNITIES PAGE — filters, structured cards
+   ============================================================================= */
+
+.opportunities-filters {
+  margin-bottom: 24px;
+}
+
+.filter-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+  margin-bottom: 12px;
+}
+
+.filter-group {
+  display: grid;
+  gap: 6px;
+  min-width: 160px;
+}
+
+.filter-group label {
+  font-size: 13px;
+  color: #555;
+  font-weight: 500;
+}
+
+.filter-group select {
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #c8c8d4;
+  background: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  color: #1b1b1b;
+  cursor: pointer;
+}
+
+.filter-group select:focus {
+  outline: none;
+  border-color: #2a4dff;
+  box-shadow: 0 0 0 2px rgba(42, 77, 255, 0.2);
+}
+
+.filter-status {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  font-size: 14px;
+  color: #555;
+}
+
+.btn-clear-filters {
+  background: none;
+  border: none;
+  color: #2a4dff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.btn-clear-filters:hover {
+  color: #1e3ad4;
+}
+
+/* Opportunity card fields */
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #1b1b1b;
+  line-height: 1.3;
+}
+
+.card-source {
+  font-size: 13px;
+  color: #6a6a6a;
+}
+
+.card-description {
+  font-size: 14px;
+  color: #444;
+  line-height: 1.6;
+}
+
+.card-badge--funding {
+  background: #e8ecff;
+  color: #2a4dff;
+}
+
+.card-badge--amount {
+  background: #e0f5e9;
+  color: #0d6b2c;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 4px 8px;
+  border-radius: 6px;
+}
+
+.card-badge--category {
+  background: #fff4e0;
+  color: #b35c00;
+}
+
+.card--submitted {
+  border-left: 4px solid #f59e0b;
+}
+
+/* =============================================================================
+   SUBMIT OPPORTUNITY PAGE — field hints and character counters
+   ============================================================================= */
+
+.field-hint {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-top: 4px;
+}
+
+.field-hint--warn {
+  color: #b35c00;
+  font-weight: 500;
+}
+
+/* =============================================================================
+   COMMUNITY PAGE — vote buttons on post listing
+   ============================================================================= */
+
+.post-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.post-card-main {
+  flex: 1;
+  min-width: 0;
+}
+
+.post-card-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.post-card-accepted {
+  font-size: 12px;
+  font-weight: 600;
+  color: #0d6b2c;
+}
+
+/* =============================================================================
+   COMMUNITY POST PAGE — two-level threaded replies, votes, accepted answer
+   ============================================================================= */
+
+/* Post with vote column */
+.community-post-inner {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+
+.post-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding-top: 4px;
+}
+
+.post-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Vote buttons — shared across post and replies */
+.vote-btn {
+  background: none;
+  border: 1px solid #c8c8d4;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  color: #888;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  line-height: 1;
+}
+
+.vote-btn:hover:not(:disabled) {
+  border-color: #2a4dff;
+  color: #2a4dff;
+  background: #f0f3ff;
+}
+
+.vote-btn--voted {
+  border-color: #2a4dff;
+  color: #2a4dff;
+  background: #e8ecff;
+  cursor: default;
+}
+
+.vote-btn--sm {
+  width: 24px;
+  height: 24px;
+  font-size: 11px;
+}
+
+.vote-count {
+  font-size: 13px;
+  font-weight: 600;
+  color: #444;
+  text-align: center;
+  min-width: 20px;
+}
+
+/* Accept button */
+.accept-btn {
+  background: none;
+  border: 1px solid #c8c8d4;
+  border-radius: 6px;
+  width: 32px;
+  height: 32px;
+  font-size: 15px;
+  color: #aaa;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 4px;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+  line-height: 1;
+}
+
+.accept-btn:hover {
+  border-color: #0d6b2c;
+  color: #0d6b2c;
+  background: #e0f5e9;
+}
+
+.accept-btn--active {
+  border-color: #0d6b2c;
+  color: #0d6b2c;
+  background: #e0f5e9;
+}
+
+/* Accepted answer badge */
+.accepted-badge {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #0d6b2c;
+  background: #e0f5e9;
+  padding: 3px 8px;
+  border-radius: 5px;
+  margin-bottom: 8px;
+}
+
+/* Top-level reply card with vote column */
+.reply-card--accepted {
+  border-left: 4px solid #0d6b2c;
+  background: #f6fdf8;
+}
+
+.reply-card-inner {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+}
+
+.reply-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex-shrink: 0;
+  padding-top: 2px;
+}
+
+.reply-content {
+  flex: 1;
+  min-width: 0;
+}
+
+/* Nested replies */
+.nested-reply-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 16px;
+  padding-left: 16px;
+  border-left: 2px solid #e8e8ee;
+}
+
+.nested-reply {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.nested-reply-vote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  flex-shrink: 0;
+}
+
+.nested-reply-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.nested-reply-content .reply-body {
+  font-size: 14px;
+  margin-bottom: 6px;
+}
+
+.nested-reply-content .reply-meta {
+  font-size: 12px;
+}
+
+/* Inline reply-to-reply trigger */
+.btn-text-reply {
+  background: none;
+  border: none;
+  color: #2a4dff;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 6px 0 0;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.btn-text-reply:hover {
+  color: #1e3ad4;
+  text-decoration: underline;
+}
+
+/* Inline reply form (inside top-level reply) */
+.reply-form {
+  margin-top: 14px;
+  padding: 16px;
+  background: #f7f7fb;
+  border-radius: 8px;
+  border: 1px solid #e0e0ea;
+}
+
+.reply-form .form-group {
+  margin-bottom: 12px;
+}
+
+.reply-form label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: #333;
+  margin-bottom: 6px;
+}
+
+.reply-form textarea,
+.reply-form input {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 8px;
+  border: 1px solid #c8c8d4;
+  background: #fff;
+  font-size: 14px;
+  font-family: inherit;
+  resize: vertical;
+}
+
+.reply-form textarea {
+  min-height: 80px;
+}
+
+.reply-form textarea:focus,
+.reply-form input:focus {
+  outline: none;
+  border-color: #2a4dff;
+  box-shadow: 0 0 0 2px rgba(42, 77, 255, 0.2);
+}
+
+.reply-form-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+/* Top-level answer form wrapper */
+.reply-form-wrap {
+  margin-top: 8px;
+  max-width: 640px;
+}
+
+.reply-form-wrap .reply-form {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Small button modifier */
+.btn--sm {
+  padding: 8px 14px;
+  font-size: 13px;
+}
